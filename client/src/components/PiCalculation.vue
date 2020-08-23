@@ -7,7 +7,7 @@
         <form>
           <div class="form-group">
             <label for="">Last update: {{ piLastUpdated }}</label>
-            <input v-model="pi.currentPi" type="text" class="form-control" />
+            <input v-model="pi.currentPi" type="text" class="form-control" readonly />
           </div>
 
           <div class="action">
@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
 import { GET_PI, CALCULATE_PI } from '@/store';
 
@@ -67,6 +67,7 @@ export default class PiCalculation extends Vue {
       this.calculatePi({ start: false })
       this.startButton.text = "start";
       this.startButton.class = "btn-success";
+      this.getPi({})
       clearInterval(this.startButton.interval);
     }
   }

@@ -1,19 +1,43 @@
 // tslint:disable
-const BigInteger = require('jsbn').BigInteger;
+import piCalculationModel from '../models/picalculation.model';
 
-let currentPi = '';
-let lastUpdated = new Date();
-let isStarted = false;
+const BigInteger = require('jsbn').BigInteger;
 
 const bi = (n: any, b = 10) => new BigInteger(n.toString(), b);
 
-const calculatePi = () => {
+let isStarted = false;
+
+const calculatePi = async () => {
+
+  let currentPi = '';
+  let lastUpdated = new Date();
+
   let q = bi(1);
   let r = bi(0);
   let t = bi(1);
   let k = bi(1);
   let n = bi(3);
   let l = bi(3);
+  let nn = 0;
+  let nr = 0;
+  let firstrun = true;
+
+  const lastCalculation = await piCalculationModel.findOne().sort({ _id: -1 }).limit(1);
+
+  if (lastCalculation) {
+    q = bi(lastCalculation.q);
+    r = bi(lastCalculation.r);
+    t = bi(lastCalculation.t);
+    k = bi(lastCalculation.k);
+    n = bi(lastCalculation.n);
+    l = bi(lastCalculation.l);
+    nn = bi(lastCalculation.nn);
+    nr = bi(lastCalculation.nr);
+    firstrun = false;
+
+    currentPi = lastCalculation.currentPi;
+    lastUpdated = new Date(lastCalculation.lastUpdated);
+  }
 
   const one = bi(1);
   const two = bi(2);
@@ -22,14 +46,25 @@ const calculatePi = () => {
   const seven = bi(7);
   const ten = bi(10);
 
-  let nn = 0;
-  let nr = 0;
-  let firstrun = 1;
-
-  const write = (s: string) => {
+  const write = async (s: string, q?: string, r?: string, t?: string, k?: string, n?: string, l?: string) => {
     currentPi += s;
     lastUpdated = new Date();
-    console.log(currentPi);
+
+    const storeCalculation = new piCalculationModel({
+      q,
+      r,
+      t,
+      k,
+      n,
+      l,
+      nn,
+      nr,
+      firstrun,
+      currentPi,
+      lastUpdated,
+    });
+
+    await storeCalculation.save();
   };
 
   const recursiveCalculatePi = (q: any, r: any, t: any, k: any, n: any, l: any) => {
@@ -38,17 +73,19 @@ const calculatePi = () => {
       if (q.multiply(four).add(r).subtract(t).compareTo(n.multiply(t)) < 0) {
 
         // update the digit of pi
-        write(n.toString());
-
-        if (firstrun === 1) {
-          write('.');
-          firstrun = 0;
-        }
+        const s = n.toString();
 
         nr = (r.subtract(n.multiply(t))).multiply(ten); // (r - (n * t)) * 10
         n = (q.multiply(three).add(r)).multiply(ten).divide(t).subtract(n.multiply(ten)); // (q * 3 + r) * 10 / t - (n * 10)
         q = q.multiply(ten); // q * 10
         r = nr;
+
+        write(s, q.toString(), r.toString(), t.toString(), k.toString(), n.toString(), l.toString());
+
+        if (firstrun) {
+          write('.');
+          firstrun = false;
+        }
 
         return setTimeout(() => {
           recursiveCalculatePi(q, r, t, k, n, l);
@@ -81,15 +118,7 @@ const stop = () => {
   isStarted = false;
 };
 
-const getPi = () => {
-  return {
-    lastUpdated,
-    currentPi,
-  };
-};
-
 export default {
-  getPi,
   start,
   stop,
 };

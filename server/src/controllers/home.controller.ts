@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import Controller from '../interfaces/controller.interface';
 import Spigot from '../lib/spigot';
+import piCalculationModel from '../models/picalculation.model';
 
 class HomeController implements Controller {
   public path = '';
@@ -16,8 +17,24 @@ class HomeController implements Controller {
   }
 
   private getPi = async (request: Request, response: Response) => {
-    const result = Spigot.getPi();
-    response.send(result);
+    let result = {
+      lastUpdated: new Date(),
+      currentPi: '0',
+    };
+
+    const data = await piCalculationModel.findOne().sort({ _id: -1 }).limit(1);
+
+    if (data) {
+      result = {
+        lastUpdated: data.lastUpdated,
+        currentPi: data.currentPi,
+      };
+    }
+
+    response.send({
+      lastUpdated: result.lastUpdated,
+      currentPi: result.currentPi,
+    });
   }
 
   private calculatePi = async (request: Request, response: Response) => {
