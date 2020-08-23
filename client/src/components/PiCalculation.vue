@@ -13,6 +13,13 @@
           <div class="action">
             <button
               type="button"
+              class="btn btn-sm ml-1"
+              @click="reset"
+            >
+              Reset
+            </button>
+            <button
+              type="button"
               class="btn btn-sm"
               :class="startButton.class"
               @click="start"
@@ -29,7 +36,14 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { State, Action } from 'vuex-class';
-import { GET_PI, CALCULATE_PI } from '@/store';
+import { GET_PI, CALCULATE_PI, RESET_PI_CALCULATION } from '../store';
+
+const initStartButton = {
+  isStart: false,
+  text: "Calculate",
+  interval: 0,
+  class: "btn-success"
+};
 
 @Component
 export default class PiCalculation extends Vue {
@@ -37,38 +51,42 @@ export default class PiCalculation extends Vue {
   @State('pi') pi!: any
   @Action(GET_PI) getPi!: (param: any) => Promise<any>
   @Action(CALCULATE_PI) calculatePi!: (param: any) => Promise<any>
+  @Action(RESET_PI_CALCULATION) resetPiCalculation!: (param: any) => Promise<any>
 
-  startButton = {
-    isStart: false,
-    text: "start",
-    interval: 0,
-    class: "btn-success"
-  };
+  startButton = Object.assign({}, initStartButton)
 
   get piLastUpdated() {
     return new Date(this.pi.lastUpdated).toString()
   }
 
   async mounted() {
+    await this.calculatePi({ start: false })
     await this.getPi({});
   }
 
-  start() {
+  async reset() {
+    await this.resetPiCalculation({});
+    await this.getPi({});
+  }
+
+  async start() {
     this.startButton.isStart = !this.startButton.isStart;
 
     if (this.startButton.isStart) {
-      this.calculatePi({ start: true })
-      this.startButton.text = "stop";
+      await this.calculatePi({ start: true })
+
+      this.startButton.text = "Stop";
       this.startButton.class = "btn-danger";
       this.startButton.interval = setInterval(() => {
         this.getPi({})
-      }, 1000);
+      }, 1000)
     } else {
-      this.calculatePi({ start: false })
-      this.startButton.text = "start";
-      this.startButton.class = "btn-success";
-      this.getPi({})
-      clearInterval(this.startButton.interval);
+
+      await this.calculatePi({ start: false })
+      await this.getPi({})
+
+      clearInterval(this.startButton.interval)
+      this.startButton = Object.assign({}, initStartButton)
     }
   }
 }

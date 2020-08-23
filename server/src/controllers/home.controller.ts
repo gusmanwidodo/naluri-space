@@ -14,6 +14,7 @@ class HomeController implements Controller {
   private initializeRoutes() {
     this.router.get(`${this.path}/pi`, this.getPi);
     this.router.post(`${this.path}/pi/calculate`, this.calculatePi);
+    this.router.post(`${this.path}/pi/reset`, this.resetPiCalculation);
   }
 
   private getPi = async (request: Request, response: Response) => {
@@ -48,6 +49,14 @@ class HomeController implements Controller {
 
     response.send({
       isStarted: payload.start,
+    });
+  }
+
+  private resetPiCalculation = async (request: Request, response: Response) => {
+    await piCalculationModel.deleteMany({});
+
+    response.send({
+      success: true,
     });
   }
 }

@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export const CALCULATE_PI = `CALCULATE_PI`
 export const GET_PI = `GET_PI`
 export const SET_PI = `SET_PI`
+export const RESET_PI_CALCULATION = `RESET_PI_CALCULATION`
 
 export default new Vuex.Store({
   state: {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    [RESET_PI_CALCULATION] ({ commit }, payload) {
+      apiPostService(`/pi/reset`, payload)
+    },
     [CALCULATE_PI] ({ commit }, payload) {
       apiPostService(`/pi/calculate`, payload)
     },
