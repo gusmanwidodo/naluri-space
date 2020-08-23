@@ -1,10 +1,12 @@
+import Spigot from './spigot';
+
 class Circle {
   private pi = 0;
   public radius = 0;
 
-  constructor(radius: number, piDigit: number = 100) {
+  constructor(radius: number) {
     this.radius = radius;
-    this.calculatePi(piDigit);
+    this.calculatePi();
   }
 
   getDiameter() {
@@ -23,8 +25,9 @@ class Circle {
     return this.pi * this.radius * this.radius;
   }
 
-  calculatePi(digit: number) {
-    this.pi = 3.14;
+  calculatePi() {
+    // const pi = spigot.getPi();
+    // this.pi = parseFloat(spigot.currentPi);
   }
 }
 
