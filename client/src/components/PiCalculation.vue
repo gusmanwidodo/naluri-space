@@ -13,7 +13,7 @@
           <div class="action">
             <button
               type="button"
-              class="btn btn-sm ml-1"
+              class="btn btn-sm mr-1"
               @click="reset"
             >
               Reset
@@ -65,8 +65,13 @@ export default class PiCalculation extends Vue {
   }
 
   async reset() {
-    await this.resetPiCalculation({});
-    await this.getPi({});
+    const isConfirmed= confirm('Are you sure to remove all calculations?');
+
+    if (isConfirmed) {
+      await this.stop();
+      await this.resetPiCalculation({});
+      await this.getPi({});
+    }
   }
 
   async start() {
@@ -81,13 +86,16 @@ export default class PiCalculation extends Vue {
         this.getPi({})
       }, 1000)
     } else {
-
-      await this.calculatePi({ start: false })
-      await this.getPi({})
-
-      clearInterval(this.startButton.interval)
-      this.startButton = Object.assign({}, initStartButton)
+      await this.stop()
     }
+  }
+
+  async stop() {
+    await this.calculatePi({ start: false })
+    await this.getPi({})
+
+    clearInterval(this.startButton.interval)
+    this.startButton = Object.assign({}, initStartButton)
   }
 }
 </script>
