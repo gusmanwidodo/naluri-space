@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import Controller from '../interfaces/controller.interface';
-import Circle from '../lib/circle';
+import Spigot from '../lib/spigot';
 
 class HomeController implements Controller {
   public path = '';
@@ -12,14 +12,25 @@ class HomeController implements Controller {
 
   private initializeRoutes() {
     this.router.get(`${this.path}/pi`, this.getPi);
+    this.router.post(`${this.path}/pi/calculate`, this.calculatePi);
   }
 
   private getPi = async (request: Request, response: Response) => {
-    const circle = new Circle(14);
-    const pi = circle.getPi();
+    const result = Spigot.getPi();
+    response.send(result);
+  }
+
+  private calculatePi = async (request: Request, response: Response) => {
+    const payload = request.body;
+
+    if (payload.start) {
+      Spigot.start();
+    } else {
+      Spigot.stop();
+    }
 
     response.send({
-      pi,
+      isStarted: payload.start,
     });
   }
 }
