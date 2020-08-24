@@ -1,5 +1,8 @@
 # Naluri Space Project
 The Naluri space project is investigating how we could model the solar system.
+>Overview
+![Homepage](screenshots/homepage.png)
+
 
 ## Prerequisites
 These tools must be installed on your local machine:
