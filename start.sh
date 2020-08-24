@@ -7,7 +7,7 @@ buildServerDependencies() {
 
 buildClientDependencies() {
   echo "Installing client dependencies..."
-  cd client && npm i && cd ..
+  cd client && npm i && npm run build && cd ..
 }
 
 buildServerDependencies
