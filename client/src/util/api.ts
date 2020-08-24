@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const apiUrl = 'http://localhost:3000'
+const apiUrl = process.env.VUE_APP_API_URL
 const baseUrl = (path: string) => `${apiUrl}${path}`
 /**
  *

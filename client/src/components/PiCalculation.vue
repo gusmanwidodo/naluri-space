@@ -72,6 +72,8 @@ export default class PiCalculation extends Vue {
       await this.resetPiCalculation({});
       await this.getPi({});
     }
+
+    await this.getPi({});
   }
 
   async start() {

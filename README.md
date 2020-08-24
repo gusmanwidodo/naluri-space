@@ -39,17 +39,6 @@ docker-compose up -d
 │   ├── README.md
 │   ├── babel.config.js
 │   ├── dist
-│   │   ├── css
-│   │   │   └── app.5c9713c3.css
-│   │   ├── favicon.ico
-│   │   ├── index.html
-│   │   └── js
-│   │       ├── about.ee22a283.js
-│   │       ├── about.ee22a283.js.map
-│   │       ├── app.1b99357f.js
-│   │       ├── app.1b99357f.js.map
-│   │       ├── chunk-vendors.a5dcad81.js
-│   │       └── chunk-vendors.a5dcad81.js.map
 │   ├── package-lock.json
 │   ├── package.json
 │   ├── public

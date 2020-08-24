@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  node:
+    build:
+      context: ./server
+    volumes:
+      - ./server:/app
+    environment:
+      MONGO_USER: homestead
+      MONGO_PASSWORD: secret
+      MONGO_PATH: mongo:27017/nalurispace
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./client/dist:/usr/share/nginx/html
+      - ./docker-manifest/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80"
+    networks:
+      - default
+    depends_on:
+      - node
+
+  mongo:
+    image: mongo:latest
+    volumes:
+      - ./data:/data/db
+      - ./docker-manifest/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: homestead
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: nalurispace
+    networks:
+      - default
+
+
+
