@@ -11,7 +11,7 @@ These tools must be installed on your local machine:
 
 ## The Concept
 ### PI Calculation
-Implementing [Spigot Algorithm](cs.ox.ac.uk/people/jeremy.gibbons/publications/spigot.pdf) by Rabinowitz and Wagon. The code of calculation was inspired by [https://github.com/feedsbrain/calculate-pi](https://github.com/feedsbrain/calculate-pi) with some modification.
+Implementing [Spigot Algorithm](https://www.cs.ox.ac.uk/people/jeremy.gibbons/publications/spigot.pdf) by Rabinowitz and Wagon. The code of calculation was inspired by [https://github.com/feedsbrain/calculate-pi](https://github.com/feedsbrain/calculate-pi) with some modification.
 
 Circumference of the sun is calculated using common circle formula: 
 ```
